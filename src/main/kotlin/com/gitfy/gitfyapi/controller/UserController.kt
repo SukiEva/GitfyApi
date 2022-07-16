@@ -137,9 +137,9 @@ class UserController {
     /**
      * 用户修改信息接口
      *
-     * @param userName 用户名
+     * @param username 用户名
      * @param password 密码
-     * @param nickName 新昵称
+     * @param nickname 新昵称
      * @return Resuly
      */
     @RequestMapping(
@@ -167,7 +167,7 @@ class UserController {
     /**
      * 用户修改密码接口
      *
-     * @param userName 用户名
+     * @param username 用户名
      * @param password 原密码
      * @param newPassword 新密码
      * @return Result
