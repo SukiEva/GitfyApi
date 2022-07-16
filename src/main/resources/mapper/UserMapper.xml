@@ -48,7 +48,7 @@
           and repo = #{repo}
     </delete>
 
-    <update id="changeUserInfo" parameterType="user">
+    <update id="changeUserInfo">
         update users
         set nickname = #{nickName}
         where username = #{userName}
