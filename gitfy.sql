@@ -9,12 +9,11 @@ CREATE TABLE `follows`
 (
     `id`       bigint       NOT NULL AUTO_INCREMENT COMMENT '自增id',
     `uid`      varchar(255) NOT NULL COMMENT '用户uid',
-    `platform` varchar(50)  NOT NULL COMMENT '平台',
-    `owner`    varchar(50)  NOT NULL COMMENT '仓库拥有者',
+    `platform` varchar(50)  NOT NULL COMMENT '仓库平台',
+    `owner`    varchar(50)  NOT NULL COMMENT '仓库作者',
     `repo`     varchar(50)  NOT NULL COMMENT '仓库名称',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 144106
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci
   ROW_FORMAT = DYNAMIC;
@@ -33,6 +32,22 @@ CREATE TABLE `users`
     `usertype` varchar(255) DEFAULT NULL COMMENT '用户类型',
     `tgid`     varchar(255) DEFAULT NULL COMMENT 'telegram id',
     PRIMARY KEY (`uid`) USING BTREE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci
+  ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for repos
+-- ----------------------------
+DROP TABLE IF EXISTS `repos`;
+CREATE TABLE `repos`
+(
+    `id`       int         NOT NULL AUTO_INCREMENT COMMENT '自增id',
+    `platform` varchar(50) NOT NULL COMMENT '仓库平台',
+    `owner`    varchar(50) NOT NULL COMMENT '仓库作者',
+    `repo`     varchar(50) NOT NULL COMMENT '仓库名称',
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci

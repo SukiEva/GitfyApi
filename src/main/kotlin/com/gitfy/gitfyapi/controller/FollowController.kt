@@ -36,6 +36,7 @@ class FollowController {
         @PathParam("uid") uid: String
     ): Result {
         val repos = followService.getFollowByUid(uid)
+        logger.info("$uid————获取关注列表")
         return ResultFactory.buildSuccessResult("获取用户关注仓库成功", repos)
     }
 

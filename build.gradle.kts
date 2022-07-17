@@ -1,10 +1,22 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+
 plugins {
+    val kotlinVersion = "1.6.21"
     id("org.springframework.boot") version "2.7.1"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.6.21"
-    kotlin("plugin.spring") version "1.6.21"
+    kotlin("jvm") version kotlinVersion
+    kotlin("plugin.spring") version kotlinVersion
+    kotlin("plugin.noarg") version kotlinVersion
+    // kotlin("plugin.allopen") version kotlinVersion
+}
+
+//allOpen {
+//    annotation("com.gitfy.gitfyapi.util.AllOpen")
+//}
+
+noArg {
+    annotation("com.gitfy.gitfyapi.util.NoArg")
 }
 
 group = "com.gitfy"
@@ -17,12 +29,14 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2")
     implementation("mysql:mysql-connector-java")
-    implementation("junit:junit:4.13.2")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.apache.httpcomponents:httpclient")
+    implementation("junit:junit")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
