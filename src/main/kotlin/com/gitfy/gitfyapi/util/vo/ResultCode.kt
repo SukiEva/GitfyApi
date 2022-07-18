@@ -1,4 +1,4 @@
-package com.gitfy.gitfyapi.util
+package com.gitfy.gitfyapi.util.vo
 
 enum class ResultCode(var code: Int) {
     SUCCESS(200),

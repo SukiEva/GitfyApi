@@ -6,15 +6,17 @@ import org.springframework.web.cors.CorsConfiguration.ALL
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
-
+/**
+ * 允许跨域访问
+ */
 @Configuration
-class CORSConfig {
+class CorsConfig {
     @Bean
     fun addCorsConfig(): WebMvcConfigurer {
         return object : WebMvcConfigurer {
             override fun addCorsMappings(registry: CorsRegistry) {
-                registry.addMapping("/**").allowedOriginPatterns("*").allowedMethods(ALL).allowedHeaders(ALL)
-                    .allowCredentials(true)
+                registry.addMapping("/**").allowedOriginPatterns("*").allowedMethods(ALL)
+                    .allowedHeaders(ALL).allowCredentials(true)
             }
         }
     }

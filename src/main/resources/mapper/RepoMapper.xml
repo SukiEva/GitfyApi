@@ -9,20 +9,20 @@
         , owner, repo
     </sql>
 
-    <select id="getAllRepos">
+    <select id="getAllRepos" resultType="repo">
         select
         <include refid="cols"/>
         from repos
     </select>
 
-    <select id="getReposByPlatform" parameterType="string">
+    <select id="getReposByPlatform" parameterType="string" resultType="repo">
         select
         <include refid="cols"/>
         from repos
         where platform = #{platform}
     </select>
 
-    <select id="getReposByOwner">
+    <select id="getReposByOwner" resultType="repo">
         select
         <include refid="cols"/>
         from repos
@@ -43,7 +43,7 @@
           and repo = #{repo}
     </delete>
 
-    <select id="ifRepoExists">
+    <select id="ifRepoExists" resultType="int">
         select count(*)
         from repos
         where platform = #{platform}

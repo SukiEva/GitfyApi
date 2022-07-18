@@ -1,12 +1,18 @@
 package com.gitfy.gitfyapi.util
 
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Component
 import java.util.concurrent.TimeUnit
 
+/**
+ * Redis 工具类
+ */
 @Component
 class RedisUtil {
+
+    private val logger = LoggerFactory.getLogger(RedisUtil::class.java)
 
     @Autowired
     private lateinit var redisTemplate: RedisTemplate<String, Any>
@@ -22,7 +28,7 @@ class RedisUtil {
         try {
             return redisTemplate.opsForValue().get(key)
         } catch (e: Exception) {
-            e.printStackTrace()
+            logger.error("Redis————读取错误：\n $e")
         }
         return null
     }
@@ -44,7 +50,7 @@ class RedisUtil {
             }
             return true
         } catch (e: Exception) {
-            e.printStackTrace()
+            logger.error("Redis————写入错误：\n $e")
         }
         return false
     }

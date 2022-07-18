@@ -2,8 +2,8 @@ package com.gitfy.gitfyapi.service
 
 import com.gitfy.gitfyapi.mapper.RepoMapper
 import com.gitfy.gitfyapi.pojo.Repo
-import com.gitfy.gitfyapi.pojo.RepoDetail
-import com.gitfy.gitfyapi.util.RedisUtil
+import com.gitfy.gitfyapi.util.PlatformUtil
+import com.gitfy.gitfyapi.util.vo.RepoDetail
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -15,34 +15,38 @@ class RepoService {
     private lateinit var repoMapper: RepoMapper
 
     @Autowired
-    private lateinit var redisUtil: RedisUtil
+    private lateinit var platformUtil: PlatformUtil
 
     fun getAllRepos(): List<RepoDetail> {
-        val repoDetailList = mutableListOf<RepoDetail>()
         val repoList = repoMapper.getAllRepos()
-        for (repo in repoList) {
-            val detail =
-                redisUtil.get("${repo.platform}:${repo.owner}:${repo.repo}") as RepoDetail
-            repoDetailList.add(detail)
-        }
-        return repoDetailList
+        return getRepoDetailList(repoList)
     }
 
-    fun getReposByPlatform(platform: String): List<Repo> {
-        return repoMapper.getReposByPlatform(platform)
+    fun getReposByPlatform(platform: String): List<RepoDetail> {
+        val repoList = repoMapper.getReposByPlatform(platform)
+        return getRepoDetailList(repoList)
     }
 
-    fun getReposByOwner(platform: String, owner: String): List<Repo> {
-        return repoMapper.getReposByOwner(platform, owner)
+    fun getReposByOwner(platform: String, owner: String): List<RepoDetail> {
+        val repoList = repoMapper.getReposByOwner(platform, owner)
+        return getRepoDetailList(repoList)
     }
 
     fun addRepo(repo: Repo) {
         if (repoMapper.ifRepoExists(repo) != 0) {
-            repoMapper.addRepo(repo)
+            return
         }
+        repoMapper.addRepo(repo)
+        platformUtil.addToRedis(repo)
     }
 
     fun removeRepo(repo: Repo) {
         repoMapper.removeRepo(repo)
+    }
+
+    private fun getRepoDetailList(repoList: List<Repo>): List<RepoDetail> {
+        val repoDetailList = mutableListOf<RepoDetail>()
+        for (repo in repoList) repoDetailList.add(platformUtil.getFromRedis(repo))
+        return repoDetailList
     }
 }

@@ -1,7 +1,7 @@
 package com.gitfy.gitfyapi.factory
 
 import com.gitfy.gitfyapi.pojo.Result
-import com.gitfy.gitfyapi.util.ResultCode
+import com.gitfy.gitfyapi.util.vo.ResultCode
 
 object ResultFactory {
     fun buildSuccessResult(message: String = "Success", data: Any? = null): Result {

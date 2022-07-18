@@ -24,6 +24,9 @@ import org.apache.http.util.EntityUtils
 import org.slf4j.LoggerFactory
 import java.io.UnsupportedEncodingException
 
+/**
+ * Http 工具单例类
+ */
 object HttpUtil {
 
     private val LOG = LoggerFactory.getLogger(HttpUtil::class.java)
@@ -93,7 +96,7 @@ object HttpUtil {
     fun doGet(
         url: String,
         params: Map<String, String>? = null,
-        headers: MutableMap<String, String>? = null
+        headers: Map<String, String>? = null
     ): String? {
         val uriBuilder = URIBuilder(url).apply {
             params?.let {
@@ -124,7 +127,7 @@ object HttpUtil {
     fun doPost(
         url: String,
         params: Map<String, String>? = null,
-        headers: MutableMap<String, String>? = null
+        headers: Map<String, String>? = null
     ): String? {
         val httpPost = HttpPost(url).apply { this.config = requestConfig }
         setHeader(headers, httpPost)
@@ -173,11 +176,11 @@ object HttpUtil {
     }
 
     private fun setHeader(
-        headers: MutableMap<String, String>? = mutableMapOf("USER-AGENT" to USER_AGENT),
+        headers: Map<String, String>? = mapOf("USER-AGENT" to USER_AGENT),
         httpMethod: HttpRequestBase
     ) {
         headers?.let {
-            it["USER-AGENT"] = USER_AGENT
+            httpMethod.setHeader("User-Agent", USER_AGENT)
             it.forEach { (key, value) ->
                 httpMethod.setHeader(key, value)
             }
