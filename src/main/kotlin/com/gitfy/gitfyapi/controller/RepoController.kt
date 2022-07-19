@@ -1,6 +1,7 @@
 package com.gitfy.gitfyapi.controller
 
 import com.gitfy.gitfyapi.factory.ResultFactory
+import com.gitfy.gitfyapi.pojo.Repo
 import com.gitfy.gitfyapi.pojo.Result
 import com.gitfy.gitfyapi.service.RepoService
 import org.slf4j.LoggerFactory
@@ -39,7 +40,7 @@ class RepoController {
     /**
      * 平台仓库信息接口
      *
-     * @param platform 平台
+     * @param platform 仓库平台
      * @return Reulst
      */
     @RequestMapping(
@@ -59,8 +60,8 @@ class RepoController {
     /**
      * 作者仓库信息接口
      *
-     * @param platform 平台
-     * @param owner 仓库拥有者
+     * @param platform 仓库平台
+     * @param owner 仓库作者
      * @return Result
      */
     @RequestMapping(
@@ -75,6 +76,33 @@ class RepoController {
         val list = repoService.getReposByOwner(platform, owner)
         logger.info("获取${platform}/${owner}仓库信息")
         return ResultFactory.buildSuccessResult("获取${platform}/${owner}仓库信息", list)
+    }
+
+    /**
+     * 添加仓库接口
+     *
+     * @param platform 仓库平台
+     * @param owner 仓库作者
+     * @param repo 仓库名称
+     * @return Result
+     */
+    @RequestMapping(
+        value = ["/api/repo/add"],
+        method = [RequestMethod.POST],
+        produces = ["application/json; charset = UTF-8"]
+    )
+    @ResponseBody
+    fun addRepo(
+        @PathParam("platform") platform: String,
+        @PathParam("owner") owner: String,
+        @PathParam("repo") repo: String
+    ): Result {
+        if (platform == "github" || platform == "gitlab") {
+            repoService.addRepo(Repo(platform, owner, repo))
+            logger.info("添加仓库————${platform}:${owner}:${repo}")
+            return ResultFactory.buildSuccessResult("添加仓库")
+        }
+        return ResultFactory.buildFailResult("格式错误")
     }
 
 }

@@ -2,8 +2,6 @@ package com.gitfy.gitfyapi.util
 
 import com.gitfy.gitfyapi.pojo.Repo
 import com.gitfy.gitfyapi.util.platforms.Github
-import com.gitfy.gitfyapi.util.vo.Assets
-import com.gitfy.gitfyapi.util.vo.Release
 import com.gitfy.gitfyapi.util.vo.RepoDetail
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -15,27 +13,26 @@ class PlatformUtil {
     private lateinit var redisUtil: RedisUtil
 
 
-    fun addToRedis(repo: Repo) {
-        redisUtil.set(buildKey(repo), getRepoDetail(repo))
+    fun addToRedis(repo: Repo):Boolean {
+        val detail = getRepoDetail(repo) ?: return false
+        redisUtil.set(buildKey(repo), detail)
+        return true
     }
 
     fun getFromRedis(repo: Repo): RepoDetail {
         return redisUtil.get(buildKey(repo)) as RepoDetail
     }
 
-    private fun getRepoDetail(repo: Repo): RepoDetail {
+    private fun getRepoDetail(repo: Repo): RepoDetail? {
         when (repo.platform) {
-            "github" -> return Github(repo.owner, repo.repo).getRepoDetail()
+            "github" -> {
+                val github = Github(repo.owner, repo.repo)
+                val detail = github.getRepoDetail()
+                if (!github.ifRepoExists) return null
+                return detail
+            }
         }
-        return RepoDetail(
-            Repo("github", "SukiEva", "GitfyApi"), listOf(
-                Release(
-                    "github.com", "v1.0", "v1.0", "test", false, "null", listOf(
-                        Assets("null", "null")
-                    )
-                )
-            ), "null"
-        )
+        return null
     }
 
     private fun buildKey(repo: Repo): String {

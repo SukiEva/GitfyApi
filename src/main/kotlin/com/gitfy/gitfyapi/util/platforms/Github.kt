@@ -22,6 +22,8 @@ class Github(
     private val authorization =
         mapOf("Authorization" to "token ${PropertyConfig.github.token}")
 
+    var ifRepoExists = true
+
     fun getRepoDetail(): RepoDetail {
         return RepoDetail(
             Repo(platform, owner, repo), getReleases(), getReadMe()
@@ -31,7 +33,10 @@ class Github(
     private fun getReleases(): List<Release> {
         val list: MutableList<Release> = mutableListOf()
         val releases = HttpUtil.doGet(releaseUrl, headers = authorization).parseArray()
-            ?: return list
+        if (releases == null) {
+            ifRepoExists = false
+            return list
+        }
         for (i in 0 until releases.size) {
             val release = releases.getJSONObject(i) ?: continue
             list.add(

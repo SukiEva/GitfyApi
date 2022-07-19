@@ -36,8 +36,7 @@ class RepoService {
         if (repoMapper.ifRepoExists(repo) != 0) {
             return
         }
-        repoMapper.addRepo(repo)
-        platformUtil.addToRedis(repo)
+        if (platformUtil.addToRedis(repo)) repoMapper.addRepo(repo)
     }
 
     fun removeRepo(repo: Repo) {
