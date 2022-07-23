@@ -1,5 +1,6 @@
 package com.gitfy.gitfyapi.service
 
+import com.gitfy.gitfyapi.pojo.Repo
 import com.gitfy.gitfyapi.pojo.User
 import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
@@ -15,52 +16,35 @@ class UserServiceTest {
     @Autowired
     private lateinit var userService: UserService
 
-    private val uid = "d11be1953315445a95c65119a0c8c0a4"
+    private val uid = "a582cfe1-a4ee-4543-a5c3-b8ea76e992c4"
 
     @Test
-    fun register() {
-        val uuid = UUID.randomUUID().toString().replace("-", "")
-        val user = User(
-            uuid, "测试", "昵称", "test", "normal", ""
-        )
-        userService.register(user)
-    }
-
-    @Test
-    fun login() {
-        val user = userService.login("测试", "test")
-        println(user)
-    }
-
-    @Test
-    fun findUserByName() {
-        val user = userService.findUserByName("测试")
-        println(user)
+    fun generateUser() {
+        val user = User(UUID.randomUUID().toString(), "", false)
+        userService.generateUser(user)
     }
 
     @Test
     fun findUserByUid() {
         val user = userService.findUserByUid(uid)
         println(user)
+        println(userService.findUserByUid("null"))
     }
 
     @Test
     fun followRepo() {
-        userService.followRepo(uid, "github", "SukiEva", "GitfyApi")
+        userService.followRepo(uid, Repo("github", "SukiEva", "GitfyApi"))
     }
 
     @Test
     fun unFollowRepo() {
-        userService.unFollowRepo(uid, "github", "SukiEva", "GitfyApi")
+        userService.unFollowRepo(uid, Repo("github", "SukiEva", "GitfyApi"))
     }
 
     @Test
-    fun changeUserInfo() {
-        userService.changeUserInfo("测试", "test")
+    fun bindTelegram() {
+        userService.bindTelegram(uid, "123")
     }
 
-    @Test
-    fun changeUserPassword() {
-        userService.changeUserPassword("测试", "mytest")
-    }
+
 }

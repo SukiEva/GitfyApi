@@ -26,7 +26,7 @@ class Github(
 
     fun getRepoDetail(): RepoDetail {
         return RepoDetail(
-            Repo(platform, owner, repo), getReleases(), getReadMe()
+            Repo(platform, owner, repo), getReleases(), "",getReadMe()
         )
     }
 

@@ -25,12 +25,9 @@ CREATE TABLE `follows`
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users`
 (
-    `uid`      varchar(255) NOT NULL COMMENT '用户uid',
-    `username` varchar(255) NOT NULL COMMENT '用户名',
-    `nickname` varchar(255) NOT NULL COMMENT '昵称',
-    `password` varchar(255) NOT NULL COMMENT '密码',
-    `usertype` varchar(255) DEFAULT NULL COMMENT '用户类型',
-    `tgid`     varchar(255) DEFAULT NULL COMMENT 'telegram id',
+    `uid`     varchar(255) NOT NULL COMMENT '用户 Uid',
+    `tg`    varchar(50) DEFAULT NULL COMMENT 'Telegram Id',
+    `isadmin` bool         DEFAULT 0 COMMENT '用户类型',
     PRIMARY KEY (`uid`) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4

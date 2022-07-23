@@ -30,7 +30,7 @@ class RedisUtilTest {
         val repo = RepoDetail(
             Repo("github", "SukiEva", "GitfyApi"),
             listOf(Release("", "", "", "", false, "", listOf(Assets("", "")))),
-            ""
+            "",""
         )
         redisUtil.set("github:SukiEva:GitfyApi", repo)
     }
