@@ -2,9 +2,10 @@ package com.gitfy.gitfyapi.controller
 
 import com.gitfy.gitfyapi.factory.ResultFactory
 import com.gitfy.gitfyapi.pojo.Repo
-import com.gitfy.gitfyapi.pojo.Result
 import com.gitfy.gitfyapi.pojo.User
+import com.gitfy.gitfyapi.service.FollowService
 import com.gitfy.gitfyapi.service.UserService
+import com.gitfy.gitfyapi.util.vo.Result
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 import javax.websocket.server.PathParam
 
+@RequestMapping(
+    value = ["/api/user"], produces = ["application/json; charset = UTF-8"]
+)
 @RestController
 class UserController {
 
@@ -22,15 +26,16 @@ class UserController {
     @Autowired
     private lateinit var userService: UserService
 
+    @Autowired
+    private lateinit var followService: FollowService
+
     /**
      * 生成用户接口
      *
      * @return 用户信息
      */
     @RequestMapping(
-        value = ["/api/user/generate"],
-        method = [RequestMethod.POST, RequestMethod.GET],
-        produces = ["application/json; charset = UTF-8"]
+        value = ["/generate"], method = [RequestMethod.POST, RequestMethod.GET]
     )
     @ResponseBody
     fun generateUser(): Result {
@@ -50,9 +55,7 @@ class UserController {
      * @return Result
      */
     @RequestMapping(
-        value = ["/api/user/follow"],
-        method = [RequestMethod.POST],
-        produces = ["application/json; charset = UTF-8"]
+        value = ["/follow"], method = [RequestMethod.POST]
     )
     @ResponseBody
     fun follow(
@@ -61,7 +64,12 @@ class UserController {
         @PathParam("owner") owner: String,
         @PathParam("repo") repo: String
     ): Result {
-        userService.followRepo(uid, Repo(platform, owner, repo))
+        val r = Repo(platform, owner, repo)
+        if (followService.ifRepoFollowed(uid, r) == 1) {
+            logger.info("$uid————关注仓库重复：$platform/$owner/$repo")
+            return ResultFactory.buildFailResult("重复关注")
+        }
+        userService.followRepo(uid, r)
         logger.info("$uid————关注仓库：$platform/$owner/$repo")
         return ResultFactory.buildSuccessResult("关注成功")
     }
@@ -76,9 +84,7 @@ class UserController {
      * @return Result
      */
     @RequestMapping(
-        value = ["/api/user/unFollow"],
-        method = [RequestMethod.POST],
-        produces = ["application/json; charset = UTF-8"]
+        value = ["/unFollow"], method = [RequestMethod.POST]
     )
     @ResponseBody
     fun unFollow(
@@ -89,7 +95,7 @@ class UserController {
     ): Result {
         userService.unFollowRepo(uid, Repo(platform, owner, repo))
         logger.info("$uid————取关仓库：$platform/$owner/$repo")
-        return ResultFactory.buildSuccessResult("已经取消关注")
+        return ResultFactory.buildSuccessResult("取关成功")
     }
 
     /**
@@ -100,9 +106,7 @@ class UserController {
      * @return Result
      */
     @RequestMapping(
-        value = ["/api/user/bindTG"],
-        method = [RequestMethod.POST],
-        produces = ["application/json; charset = UTF-8"]
+        value = ["/bindTG"], method = [RequestMethod.POST]
     )
     @ResponseBody
     fun bindTelegram(
@@ -111,5 +115,27 @@ class UserController {
         userService.bindTelegram(uid, tg)
         logger.info("$uid————绑定 telegram 账号：$tg")
         return ResultFactory.buildSuccessResult("绑定成功")
+    }
+
+    /**
+     * 全部关注接口
+     *
+     * @param uid 用户id
+     * @return Result
+     */
+    @RequestMapping(
+        value = ["/repos"], method = [RequestMethod.GET]
+    )
+    @ResponseBody
+    fun getFollowByUid(
+        @PathParam("uid") uid: String
+    ): Result {
+        if (userService.findUserByUid(uid) == null) {
+            logger.info("$uid————获取关注失败：用户不存在")
+            return ResultFactory.buildFailResult("用户不存在")
+        }
+        val repos = followService.getFollowByUid(uid)
+        logger.info("$uid————获取关注列表")
+        return ResultFactory.buildSuccessResult("获取用户关注仓库成功", repos)
     }
 }

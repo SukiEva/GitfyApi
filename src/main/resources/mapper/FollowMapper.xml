@@ -13,8 +13,8 @@
         select Count(*)
         from follows
         where uid = #{uid}
-          and platform = #{platform}
-          and owner = #{owner}
-          and repo = #{repo}
+          and platform = #{repo.platform}
+          and owner = #{repo.owner}
+          and repo = #{repo.repo}
     </select>
 </mapper>

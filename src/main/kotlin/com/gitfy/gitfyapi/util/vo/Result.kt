@@ -1,4 +1,4 @@
-package com.gitfy.gitfyapi.pojo
+package com.gitfy.gitfyapi.util.vo
 
 data class Result(
     var code: Int,

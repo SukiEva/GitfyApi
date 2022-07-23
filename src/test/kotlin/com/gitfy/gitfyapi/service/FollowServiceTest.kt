@@ -1,5 +1,6 @@
 package com.gitfy.gitfyapi.service
 
+import com.gitfy.gitfyapi.pojo.Repo
 import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,7 +14,7 @@ class FollowServiceTest {
     @Autowired
     private lateinit var followService: FollowService
 
-    private val uid = "d11be1953315445a95c65119a0c8c0a4"
+    private val uid = "a582cfe1-a4ee-4543-a5c3-b8ea76e992c4"
 
     @Test
     fun getFollowByUid() {
@@ -23,7 +24,11 @@ class FollowServiceTest {
 
     @Test
     fun ifRepoFollowed() {
-        val follow = followService.ifRepoFollowed(uid, "github", "SukiEva", "GitfyApi")
+        val follow = followService.ifRepoFollowed(
+            uid, Repo(
+                "github", "SukiEva", "GitfyApi"
+            )
+        )
         println(follow)
     }
 

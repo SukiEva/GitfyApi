@@ -9,8 +9,9 @@ import com.gitfy.gitfyapi.util.NoArg
 data class RepoDetail(
     var repo: Repo,
     var releases: List<Release>,
-    var desp:String,
+    var desp: String,
     var readme: String,
+    var updatedAt: String
 )
 
 @NoArg

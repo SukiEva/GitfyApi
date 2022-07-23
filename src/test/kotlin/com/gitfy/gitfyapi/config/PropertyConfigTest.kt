@@ -9,7 +9,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 @SpringBootTest
 class PropertyConfigTest {
 
-
     @Test
     fun test() {
         println(PropertyConfig.github.token)

@@ -11,11 +11,9 @@ class FollowService {
     @Autowired
     lateinit var followMapper: FollowMapper
 
-    fun getFollowByUid(uid: String): List<Repo> {
-        return followMapper.getFollowByUid(uid)
-    }
+    fun getFollowByUid(uid: String): List<Repo> = followMapper.getFollowByUid(uid)
 
-    fun ifRepoFollowed(uid: String, platform: String, owner: String, repo: String): Int {
-        return followMapper.ifRepoFollowed(uid, platform, owner, repo)
-    }
+    fun ifRepoFollowed(uid: String, repo: Repo): Int =
+        followMapper.ifRepoFollowed(uid, repo)
+
 }

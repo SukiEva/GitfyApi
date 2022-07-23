@@ -24,9 +24,14 @@ class Github(
 
     var ifRepoExists = true
 
+    private var desp = ""
+    private var readme = ""
+    private var updateAt = ""
+
     fun getRepoDetail(): RepoDetail {
+        getInfo()
         return RepoDetail(
-            Repo(platform, owner, repo), getReleases(), "",getReadMe()
+            Repo(platform, owner, repo), getReleases(), desp, readme, updateAt
         )
     }
 
@@ -72,6 +77,14 @@ class Github(
         val readmeJson =
             HttpUtil.doGet(readmeUrl, headers = authorization).parseObject() ?: return ""
         return readmeJson.getString("content") ?: ""
+    }
+
+    private fun getInfo() {
+        val despJson =
+            HttpUtil.doGet(baseUrl, headers = authorization).parseObject() ?: return
+        desp = despJson.getString("description")
+        updateAt = despJson.getString("updated_at")
+        readme = getReadMe()
     }
 
 }

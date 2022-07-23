@@ -5,7 +5,6 @@ import com.gitfy.gitfyapi.pojo.Repo
 import com.gitfy.gitfyapi.util.PlatformUtil
 import com.gitfy.gitfyapi.util.vo.RepoDetail
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
 
@@ -33,17 +32,14 @@ class RepoService {
         return getRepoDetailList(repoList)
     }
 
-    @Async("asyncServiceExecutor")
+    //@Async("asyncServiceExecutor")
     fun addRepo(repo: Repo) {
-        if (repoMapper.ifRepoExists(repo) != 0) {
-            return
-        }
+        if (repoMapper.ifRepoExists(repo) != 0) return
         if (platformUtil.addToRedis(repo)) repoMapper.addRepo(repo)
     }
 
-    fun removeRepo(repo: Repo) {
-        repoMapper.removeRepo(repo)
-    }
+    fun removeRepo(repo: Repo) = repoMapper.removeRepo(repo)
+
 
     private fun getRepoDetailList(repoList: List<Repo>): List<RepoDetail> {
         val repoDetailList = mutableListOf<RepoDetail>()

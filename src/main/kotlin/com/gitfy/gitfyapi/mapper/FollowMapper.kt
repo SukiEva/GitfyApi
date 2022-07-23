@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface FollowMapper {
     fun getFollowByUid(uid: String): List<Repo>
-    fun ifRepoFollowed(uid: String, platform: String, owner: String, repo: String): Int
+    fun ifRepoFollowed(uid: String, repo: Repo): Int
 }

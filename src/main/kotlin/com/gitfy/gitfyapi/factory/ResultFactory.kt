@@ -1,6 +1,6 @@
 package com.gitfy.gitfyapi.factory
 
-import com.gitfy.gitfyapi.pojo.Result
+import com.gitfy.gitfyapi.util.vo.Result
 import com.gitfy.gitfyapi.util.vo.ResultCode
 
 object ResultFactory {
