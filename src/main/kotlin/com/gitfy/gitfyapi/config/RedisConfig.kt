@@ -4,17 +4,25 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.annotation.PropertyAccessor
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.cache.CacheManager
+import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.redis.cache.RedisCacheConfiguration
+import org.springframework.data.redis.cache.RedisCacheManager
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
+import org.springframework.data.redis.serializer.RedisSerializationContext
 import org.springframework.data.redis.serializer.StringRedisSerializer
+import java.time.Duration
+
 
 /**
  * Redis 配置
  */
 @Configuration
+@EnableCaching
 class RedisConfig {
 
     /**
@@ -65,6 +73,31 @@ class RedisConfig {
             afterPropertiesSet()
         }
         return redisTemplate
+    }
+
+    private val cacheTime = Duration.ofHours(1)
+
+    @Bean
+    fun cacheManager(factory: RedisConnectionFactory): CacheManager? {
+        val stringRedisSerializer =
+            RedisSerializationContext.SerializationPair.fromSerializer(
+                StringRedisSerializer()
+            )
+        val jackson2JsonRedisSerializer =
+            RedisSerializationContext.SerializationPair.fromSerializer(
+                serializer()
+            )
+        val config: RedisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+            // 缓存有效期
+            .entryTtl(cacheTime).apply {
+                // 使用StringRedisSerializer来序列化和反序列化redis的key值
+                serializeKeysWith(stringRedisSerializer)
+                // 使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值
+                serializeValuesWith(jackson2JsonRedisSerializer)
+                // 禁用空值
+                disableCachingNullValues()
+            }
+        return RedisCacheManager.builder(factory).cacheDefaults(config).build()
     }
 
 }

@@ -5,10 +5,13 @@ import com.gitfy.gitfyapi.pojo.Repo
 import com.gitfy.gitfyapi.util.PlatformUtil
 import com.gitfy.gitfyapi.util.vo.RepoDetail
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 
 
 @Service
+@CacheConfig(cacheNames = ["repos"])
 class RepoService {
 
     @Autowired
@@ -17,16 +20,19 @@ class RepoService {
     @Autowired
     private lateinit var platformUtil: PlatformUtil
 
+    @Cacheable
     fun getAllRepos(): List<RepoDetail> {
         val repoList = repoMapper.getAllRepos()
         return getRepoDetailList(repoList)
     }
 
+    @Cacheable
     fun getReposByPlatform(platform: String): List<RepoDetail> {
         val repoList = repoMapper.getReposByPlatform(platform)
         return getRepoDetailList(repoList)
     }
 
+    @Cacheable
     fun getReposByOwner(platform: String, owner: String): List<RepoDetail> {
         val repoList = repoMapper.getReposByOwner(platform, owner)
         return getRepoDetailList(repoList)

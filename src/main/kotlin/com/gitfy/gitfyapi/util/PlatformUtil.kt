@@ -15,7 +15,7 @@ class PlatformUtil {
 
     fun addToRedis(repo: Repo): Boolean {
         val detail = getRepoDetail(repo) ?: return false
-        return redisUtil.set(buildKey(repo), detail)
+        return redisUtil.set(buildKey(repo), detail, 3)
     }
 
     fun getFromRedis(repo: Repo): RepoDetail {

@@ -46,7 +46,7 @@ class RedisUtil {
         try {
             redisTemplate.opsForValue().set(key, value)
             expireTime?.let {
-                redisTemplate.expire(key, it, TimeUnit.SECONDS)
+                redisTemplate.expire(key, it, TimeUnit.DAYS)
             }
             return true
         } catch (e: Exception) {
