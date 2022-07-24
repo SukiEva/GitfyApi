@@ -28,7 +28,12 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-web") {
+        exclude(module = "spring-boot-starter-tomcat")
+    }
+    implementation("org.springframework.boot:spring-boot-starter-undertow") {
+        exclude(group = "io.undertow", module = "undertow-websockets-jsr")
+    }
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2")
     implementation("mysql:mysql-connector-java")
