@@ -10,10 +10,6 @@ interface RepoMapper {
 
     fun getAllRepos(): List<Repo>
 
-    fun getReposByPlatform(platform: String): List<Repo>
-
-    fun getReposByOwner(platform: String, owner: String): List<Repo>
-
     fun addRepo(repo: Repo)
 
     fun removeRepo(repo: Repo)

@@ -10,19 +10,6 @@
         from repos
     </select>
 
-    <select id="getReposByPlatform" parameterType="string" resultType="repo">
-        select platform, owner, repo
-        from repos
-        where platform = #{platform}
-    </select>
-
-    <select id="getReposByOwner" resultType="repo">
-        select platform, owner, repo
-        from repos
-        where platform = #{platform}
-          and owner = #{owner}
-    </select>
-
     <insert id="addRepo" parameterType="repo">
         insert into repos(platform, owner, repo)
         values (#{platform}, #{owner}, #{repo})
