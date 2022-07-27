@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface RepoMapper {
 
-    fun getAllRepos(): List<Repo>
+    fun getRepos(): List<Repo>
 
     fun addRepo(repo: Repo)
 

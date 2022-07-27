@@ -5,7 +5,7 @@
 <mapper namespace="com.gitfy.gitfyapi.mapper.RepoMapper">
 
 
-    <select id="getAllRepos" resultType="repo">
+    <select id="getRepos" resultType="repo">
         select platform, owner, repo
         from repos
     </select>

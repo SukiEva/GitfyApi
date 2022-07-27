@@ -29,16 +29,15 @@ class UpdateTask {
 
     private fun initData() {
         if (repoList.isEmpty() || curIndex >= perHourLists.size) {
-            repoList = repoMapper.getAllRepos()
+            repoList = repoMapper.getRepos()
             perHourLists = SplitListUtil.split(repoList, 1000)
             curIndex = 0
         }
-        curList = perHourLists[curIndex++]
+        if (curIndex < perHourLists.size) curList = perHourLists[curIndex++]
     }
 
     @Async("asyncServiceExecutor")
     @Scheduled(cron = "0 5 * * * *")
-    //@Scheduled(fixedDelay = 10000)
     fun update() {
         initData()
         val lists = SplitListUtil.split(curList, 50)

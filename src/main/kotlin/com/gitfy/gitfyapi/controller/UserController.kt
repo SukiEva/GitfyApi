@@ -29,6 +29,7 @@ class UserController {
     @Autowired
     private lateinit var followService: FollowService
 
+
     /**
      * 生成用户接口
      *
@@ -67,11 +68,13 @@ class UserController {
         val r = Repo(platform, owner, repo)
         if (followService.ifRepoFollowed(uid, r) == 1) {
             logger.info("$uid————关注仓库重复：$platform/$owner/$repo")
-            return ResultFactory.buildFailResult("重复关注")
+            return ResultFactory.buildFailResult()
         }
-        userService.followRepo(uid, r)
-        logger.info("$uid————关注仓库：$platform/$owner/$repo")
-        return ResultFactory.buildSuccessResult("关注成功")
+        if (userService.followRepo(uid, r)) {
+            logger.info("$uid————关注仓库：$platform/$owner/$repo")
+            return ResultFactory.buildSuccessResult()
+        }
+        return ResultFactory.buildFailResult()
     }
 
     /**
@@ -95,7 +98,7 @@ class UserController {
     ): Result {
         userService.unFollowRepo(uid, Repo(platform, owner, repo))
         logger.info("$uid————取关仓库：$platform/$owner/$repo")
-        return ResultFactory.buildSuccessResult("取关成功")
+        return ResultFactory.buildSuccessResult()
     }
 
     /**
@@ -114,7 +117,7 @@ class UserController {
     ): Result {
         userService.bindTelegram(uid, tg)
         logger.info("$uid————绑定 telegram 账号：$tg")
-        return ResultFactory.buildSuccessResult("绑定成功")
+        return ResultFactory.buildSuccessResult()
     }
 
     /**
@@ -132,10 +135,10 @@ class UserController {
     ): Result {
         if (userService.findUserByUid(uid) == null) {
             logger.info("$uid————获取关注失败：用户不存在")
-            return ResultFactory.buildFailResult("用户不存在")
+            return ResultFactory.buildFailResult()
         }
         val repos = followService.getFollowByUid(uid)
         logger.info("$uid————获取关注列表")
-        return ResultFactory.buildSuccessResult("获取用户关注仓库成功", repos)
+        return ResultFactory.buildSuccessResult(data = repos)
     }
 }

@@ -1,5 +1,6 @@
 package com.gitfy.gitfyapi.service
 
+import com.gitfy.gitfyapi.mapper.FollowMapper
 import com.gitfy.gitfyapi.mapper.RepoMapper
 import com.gitfy.gitfyapi.pojo.Repo
 import com.gitfy.gitfyapi.util.PlatformUtil
@@ -19,12 +20,20 @@ class RepoService {
     private lateinit var repoMapper: RepoMapper
 
     @Autowired
+    lateinit var followMapper: FollowMapper
+
+    @Autowired
     private lateinit var platformUtil: PlatformUtil
 
+    @Cacheable(key = "#root.args[0]")
+    fun getReposByUser(uid: String): List<RepoDetail> {
+        val repoList = followMapper.getFollowByUid(uid)
+        return getRepoDetailList(repoList)
+    }
 
     @Cacheable(key = "#root.methodName")
-    fun getAllRepos(): List<RepoDetail> {
-        val repoList = repoMapper.getAllRepos()
+    fun getRepos(): List<RepoDetail> {
+        val repoList = repoMapper.getRepos()
         return getRepoDetailList(repoList)
     }
 
@@ -32,6 +41,7 @@ class RepoService {
     fun addRepo(repo: Repo) {
         if (repoMapper.ifRepoExists(repo) != 0) return
         if (platformUtil.addToRedis(repo)) repoMapper.addRepo(repo)
+
     }
 
     @CacheEvict(allEntries = true)

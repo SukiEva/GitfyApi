@@ -28,6 +28,25 @@ class RepoController {
     private lateinit var userService: UserService
 
     /**
+     * 获取仓库接口——用户
+     *
+     * @param uid 用户id
+     * @return Result
+     */
+    @RequestMapping(
+        value = ["/getByUser"], method = [RequestMethod.GET]
+    )
+    @ResponseBody
+    fun getReposByUser(
+        @PathParam("uid") uid: String
+    ): Result {
+        val list = repoService.getReposByUser(uid)
+        logger.info("$uid————获取仓库成功")
+        return ResultFactory.buildSuccessResult("获取仓库成功", list)
+    }
+
+
+    /**
      * 获取仓库接口
      *
      * @param uid 用户id
@@ -40,14 +59,13 @@ class RepoController {
     fun getRepos(
         @PathParam("uid") uid: String
     ): Result {
-        val user = userService.findUserByUid(uid)
-        if (user == null || !user.isAdmin) {
-            logger.info("$uid————获取仓库失败——权限不足")
+        if (checkAuthFail(uid, true)) {
+            logger.info("$uid————获取全部仓库失败——权限不足")
             return ResultFactory.buildFailResult("权限不足")
         }
-        val list = repoService.getAllRepos()
-        logger.info("$uid————获取仓库成功")
-        return ResultFactory.buildSuccessResult("获取仓库成功", list)
+        val list = repoService.getRepos()
+        logger.info("$uid————获取全部仓库成功")
+        return ResultFactory.buildSuccessResult("获取全部仓库成功", list)
     }
 
 
@@ -70,8 +88,7 @@ class RepoController {
         @PathParam("owner") owner: String,
         @PathParam("repo") repo: String
     ): Result {
-        val user = userService.findUserByUid(uid)
-        if (user == null || !user.isAdmin) {
+        if (checkAuthFail(uid)) {
             logger.info("$uid————添加仓库失败——权限不足：${platform}:${owner}:${repo}")
             return ResultFactory.buildFailResult("权限不足")
         }
@@ -102,14 +119,21 @@ class RepoController {
         @PathParam("owner") owner: String,
         @PathParam("repo") repo: String
     ): Result {
-        val user = userService.findUserByUid(uid)
-        if (user == null || !user.isAdmin) {
+        if (checkAuthFail(uid, true)) {
             logger.info("$uid————删除仓库失败——权限不足：${platform}:${owner}:${repo}")
             return ResultFactory.buildFailResult("权限不足")
         }
         repoService.removeRepo(Repo(platform, owner, repo))
         logger.info("$uid————删除仓库成功：${platform}:${owner}:${repo}")
         return ResultFactory.buildSuccessResult("删除成功")
+    }
+
+    private fun checkAuthFail(uid: String, mustAdmin: Boolean = false): Boolean {
+        val user = userService.findUserByUid(uid)
+        if (user == null || user.isAdmin != mustAdmin) {
+            return true
+        }
+        return false
     }
 
 }
