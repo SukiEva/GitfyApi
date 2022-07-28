@@ -7,11 +7,7 @@ import com.gitfy.gitfyapi.service.UserService
 import com.gitfy.gitfyapi.util.vo.Result
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.RestController
-import javax.websocket.server.PathParam
+import org.springframework.web.bind.annotation.*
 
 @RequestMapping(
     value = ["/api/repo"], produces = ["application/json; charset = UTF-8"]
@@ -38,11 +34,11 @@ class RepoController {
     )
     @ResponseBody
     fun getReposByUser(
-        @PathParam("uid") uid: String
+        @RequestParam("uid") uid: String
     ): Result {
         val list = repoService.getReposByUser(uid)
         logger.info("$uid————获取仓库成功")
-        return ResultFactory.buildSuccessResult("获取仓库成功", list)
+        return ResultFactory.buildSuccessResult(data = list)
     }
 
 
@@ -57,15 +53,15 @@ class RepoController {
     )
     @ResponseBody
     fun getRepos(
-        @PathParam("uid") uid: String
+        @RequestParam("uid") uid: String
     ): Result {
         if (checkAuthFail(uid, true)) {
             logger.info("$uid————获取全部仓库失败——权限不足")
-            return ResultFactory.buildFailResult("权限不足")
+            return ResultFactory.buildFailResult()
         }
         val list = repoService.getRepos()
         logger.info("$uid————获取全部仓库成功")
-        return ResultFactory.buildSuccessResult("获取全部仓库成功", list)
+        return ResultFactory.buildSuccessResult(data = list)
     }
 
 
@@ -83,21 +79,21 @@ class RepoController {
     )
     @ResponseBody
     fun addRepo(
-        @PathParam("uid") uid: String,
-        @PathParam("platform") platform: String,
-        @PathParam("owner") owner: String,
-        @PathParam("repo") repo: String
+        @RequestParam("uid") uid: String,
+        @RequestParam("platform") platform: String,
+        @RequestParam("owner") owner: String,
+        @RequestParam("repo") repo: String
     ): Result {
         if (checkAuthFail(uid)) {
             logger.info("$uid————添加仓库失败——权限不足：${platform}:${owner}:${repo}")
-            return ResultFactory.buildFailResult("权限不足")
+            return ResultFactory.buildFailResult()
         }
         if (platform == "github" || platform == "gitlab") {
             repoService.addRepo(Repo(platform, owner, repo))
             logger.info("$uid————添加仓库成功：${platform}:${owner}:${repo}")
-            return ResultFactory.buildSuccessResult("添加仓库成功")
+            return ResultFactory.buildSuccessResult()
         }
-        return ResultFactory.buildFailResult("格式错误")
+        return ResultFactory.buildFailResult()
     }
 
     /**
@@ -114,23 +110,23 @@ class RepoController {
     )
     @ResponseBody
     fun removeRepo(
-        @PathParam("uid") uid: String,
-        @PathParam("platform") platform: String,
-        @PathParam("owner") owner: String,
-        @PathParam("repo") repo: String
+        @RequestParam("uid") uid: String,
+        @RequestParam("platform") platform: String,
+        @RequestParam("owner") owner: String,
+        @RequestParam("repo") repo: String
     ): Result {
         if (checkAuthFail(uid, true)) {
             logger.info("$uid————删除仓库失败——权限不足：${platform}:${owner}:${repo}")
-            return ResultFactory.buildFailResult("权限不足")
+            return ResultFactory.buildFailResult()
         }
         repoService.removeRepo(Repo(platform, owner, repo))
         logger.info("$uid————删除仓库成功：${platform}:${owner}:${repo}")
-        return ResultFactory.buildSuccessResult("删除成功")
+        return ResultFactory.buildSuccessResult()
     }
 
     private fun checkAuthFail(uid: String, mustAdmin: Boolean = false): Boolean {
         val user = userService.findUserByUid(uid)
-        if (user == null || user.isAdmin != mustAdmin) {
+        if (user == null || (mustAdmin && !user.isAdmin)) {
             return true
         }
         return false

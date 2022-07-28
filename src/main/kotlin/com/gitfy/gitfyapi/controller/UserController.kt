@@ -8,12 +8,8 @@ import com.gitfy.gitfyapi.service.UserService
 import com.gitfy.gitfyapi.util.vo.Result
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
-import javax.websocket.server.PathParam
 
 @RequestMapping(
     value = ["/api/user"], produces = ["application/json; charset = UTF-8"]
@@ -60,10 +56,10 @@ class UserController {
     )
     @ResponseBody
     fun follow(
-        @PathParam("uid") uid: String,
-        @PathParam("platform") platform: String,
-        @PathParam("owner") owner: String,
-        @PathParam("repo") repo: String
+        @RequestParam("uid") uid: String,
+        @RequestParam("platform") platform: String,
+        @RequestParam("owner") owner: String,
+        @RequestParam("repo") repo: String
     ): Result {
         val r = Repo(platform, owner, repo)
         if (followService.ifRepoFollowed(uid, r) == 1) {
@@ -74,6 +70,7 @@ class UserController {
             logger.info("$uid————关注仓库：$platform/$owner/$repo")
             return ResultFactory.buildSuccessResult()
         }
+        logger.info("$uid————关注仓库失败——仓库不存在：$platform/$owner/$repo")
         return ResultFactory.buildFailResult()
     }
 
@@ -91,10 +88,10 @@ class UserController {
     )
     @ResponseBody
     fun unFollow(
-        @PathParam("uid") uid: String,
-        @PathParam("platform") platform: String,
-        @PathParam("owner") owner: String,
-        @PathParam("repo") repo: String
+        @RequestParam("uid") uid: String,
+        @RequestParam("platform") platform: String,
+        @RequestParam("owner") owner: String,
+        @RequestParam("repo") repo: String
     ): Result {
         userService.unFollowRepo(uid, Repo(platform, owner, repo))
         logger.info("$uid————取关仓库：$platform/$owner/$repo")
@@ -113,7 +110,7 @@ class UserController {
     )
     @ResponseBody
     fun bindTelegram(
-        @PathParam("uid") uid: String, @PathParam("tg") tg: String
+        @RequestParam("uid") uid: String, @RequestParam("tg") tg: String
     ): Result {
         userService.bindTelegram(uid, tg)
         logger.info("$uid————绑定 telegram 账号：$tg")
@@ -131,7 +128,7 @@ class UserController {
     )
     @ResponseBody
     fun getFollowByUid(
-        @PathParam("uid") uid: String
+        @RequestParam("uid") uid: String
     ): Result {
         if (userService.findUserByUid(uid) == null) {
             logger.info("$uid————获取关注失败：用户不存在")
