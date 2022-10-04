@@ -1,17 +1,26 @@
 package com.github.gitfy.gitfyapi.vo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class RepoVO {
+    @NonNull
     private String platform;
+
+    @NonNull
     private String owner;
+
+    @NonNull
     private String name;
+
     private String fullName;
     private String description;
     private String htmlUrl;

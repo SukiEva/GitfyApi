@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.github.gitfy.gitfyapi.dao.IFollowDao">
+    <select id="getFollowsByUid" parameterType="string" resultType="repoVO">
+        select platform, owner, name
+        from follows
+        where uid = #{uid}
+    </select>
+
+    <select id="ifRepoFollowed" resultType="int">
+        select count(1)
+        from follows
+        where uid = #{uid}
+          and platform = #{repo.platform}
+          and owner = #{repo.owner}
+          and name = #{repo.repo}
+    </select>
+</mapper>

@@ -1,4 +1,4 @@
-package com.github.gitfy.gitfyapi.domain;
+package com.github.gitfy.gitfyapi.infrastructure;
 
 import com.github.gitfy.gitfyapi.util.HttpClientUtil;
 import com.github.gitfy.gitfyapi.vo.AssetVO;

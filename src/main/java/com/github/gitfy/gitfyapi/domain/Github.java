@@ -1,6 +1,8 @@
 package com.github.gitfy.gitfyapi.domain;
 
 import com.alibaba.fastjson.JSON;
+import com.github.gitfy.gitfyapi.infrastructure.AbstractPlatform;
+import com.github.gitfy.gitfyapi.util.StringUtil;
 import com.github.gitfy.gitfyapi.vo.AssetVO;
 import com.github.gitfy.gitfyapi.vo.ReleaseVO;
 import org.springframework.util.StringUtils;
@@ -11,7 +13,7 @@ import java.util.List;
 public class Github extends AbstractPlatform {
 
     public Github(String owner, String name) {
-        baseUrl = httpClient.buildUrl("https://api.github.com/repos", owner, name);
+        baseUrl = StringUtil.buildUrl("https://api.github.com/repos", owner, name);
     }
 
     @Override
@@ -20,7 +22,7 @@ public class Github extends AbstractPlatform {
         if (!StringUtils.hasText(response)) {
             return new ArrayList<>();
         }
-        return JSON.parseArray(response,ReleaseVO.class);
+        return JSON.parseArray(response, ReleaseVO.class);
     }
 
     @Override

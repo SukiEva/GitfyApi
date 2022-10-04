@@ -1,9 +1,9 @@
 package com.github.gitfy.gitfyapi.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
@@ -16,22 +16,18 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class HttpClientUtil {
-    private static final Logger LOG = LoggerFactory.getLogger(HttpClientUtil.class);
-
     private static final String DEFAULT_ENCODING = "UTF-8";
 
     private static final int DEFAULT_CONNECT_TIMEOUT = 1000 * 6;
@@ -56,24 +52,6 @@ public class HttpClientUtil {
             .setConnectTimeout(DEFAULT_CONNECT_TIMEOUT)
             .setConnectionRequestTimeout(DEFAULT_CONNECT_REQUEST_TIMEOUT)
             .build();
-
-    /**
-     * 构建完整 url
-     *
-     * @param url   请求地址
-     * @param paths 请求路径
-     * @return String
-     */
-    public String buildUrl(String url, String... paths) {
-        try {
-            return new URIBuilder(url)
-                    .setPathSegments(paths)
-                    .build()
-                    .toString();
-        } catch (URISyntaxException exception) {
-            return url;
-        }
-    }
 
     /**
      * Get 请求
@@ -108,7 +86,7 @@ public class HttpClientUtil {
                 return EntityUtils.toString(response.getEntity(), DEFAULT_ENCODING);
             }
         } catch (IOException exception) {
-            LOG.error("HttpClient do{}: {}", method, exception.getMessage());
+            log.error("HttpClient do{}: {}", method, exception.getMessage());
         }
         return "";
     }
@@ -154,7 +132,7 @@ public class HttpClientUtil {
                     .setDefaultCookieStore(new BasicCookieStore())
                     .build();
         } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException exception) {
-            LOG.error("Fail to create customed http client: {}", exception.getMessage());
+            log.error("Fail to create customed http client: {}", exception.getMessage());
         }
         return HttpClients.createDefault();
     }
