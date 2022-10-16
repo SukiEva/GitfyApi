@@ -10,7 +10,6 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -53,6 +52,33 @@ public class HttpClientUtil {
             .setConnectionRequestTimeout(DEFAULT_CONNECT_REQUEST_TIMEOUT)
             .build();
 
+    private static CloseableHttpClient httpClient;
+
+    static {
+        PoolingHttpClientConnectionManager connectionManager;
+        try {
+            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, (chain, authType) -> true).build();
+            SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext,
+                    NoopHostnameVerifier.INSTANCE);
+            // 设置http和https协议对应的处理socket链接工厂的对象
+            Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create().
+                    register("http", PlainConnectionSocketFactory.getSocketFactory())
+                    .register("https", sslSocketFactory)
+                    .build();
+            // 创建http连接池
+            connectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+            connectionManager.setMaxTotal(MAX_TOTAL);
+            connectionManager.setDefaultMaxPerRoute(MAX_PER_ROUTE);
+            httpClient = HttpClients.custom()
+                    .setDefaultRequestConfig(REQUEST_CONFIG)
+                    .setConnectionManager(connectionManager)
+                    .build();
+        } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException exception) {
+            log.error("Fail to create customed http client: {}", exception.getMessage());
+            httpClient = HttpClients.createDefault();
+        }
+    }
+
     /**
      * Get 请求
      *
@@ -80,8 +106,7 @@ public class HttpClientUtil {
     private String doRequest(String method, String url, Map<String, Object> params,
                              Map<String, String> header) {
         HttpUriRequest request = buildRequest(method, url, params, header);
-        try (CloseableHttpClient httpClient = buildClient()) {
-            CloseableHttpResponse response = httpClient.execute(request);
+        try (CloseableHttpResponse response = httpClient.execute(request)) {
             if (response != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 return EntityUtils.toString(response.getEntity(), DEFAULT_ENCODING);
             }
@@ -109,31 +134,5 @@ public class HttpClientUtil {
             }
         }
         return requestBuilder.build();
-    }
-
-    private CloseableHttpClient buildClient() {
-        PoolingHttpClientConnectionManager connectionManager;
-        try {
-            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, (chain, authType) -> true).build();
-            SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext,
-                    NoopHostnameVerifier.INSTANCE);
-            // 设置http和https协议对应的处理socket链接工厂的对象
-            Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create().
-                    register("http", PlainConnectionSocketFactory.getSocketFactory())
-                    .register("https", sslSocketFactory)
-                    .build();
-            // 创建http连接池
-            connectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
-            connectionManager.setMaxTotal(MAX_TOTAL);
-            connectionManager.setDefaultMaxPerRoute(MAX_PER_ROUTE);
-            return HttpClients.custom()
-                    .setDefaultRequestConfig(REQUEST_CONFIG)
-                    .setConnectionManager(connectionManager)
-                    .setDefaultCookieStore(new BasicCookieStore())
-                    .build();
-        } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException exception) {
-            log.error("Fail to create customed http client: {}", exception.getMessage());
-        }
-        return HttpClients.createDefault();
     }
 }
