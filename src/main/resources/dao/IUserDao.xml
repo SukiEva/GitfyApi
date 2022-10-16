@@ -22,18 +22,4 @@
         from users
         where telegram = #{telegram}
     </select>
-
-    <insert id="followRepo">
-        insert into follows(uid, platform, owner, name)
-        values (#{uid}, #{repo.platform}, #{repo.owner}, #{repo.name})
-    </insert>
-
-    <delete id="unFollowRepo">
-        delete
-        from follows
-        where uid = #{uid}
-          and platform = #{repo.platform}
-          and owner = #{repo.owner}
-          and name = #{repo.name}
-    </delete>
 </mapper>

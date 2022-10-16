@@ -35,7 +35,6 @@ public class UserService {
         }
     }
 
-
     public boolean followRepo(String uid, String platform, String owner, String name) {
         RepoVO repo = new RepoVO(platform, owner, name);
         if (followDao.ifRepoFollowed(uid, repo) != 0) {
@@ -43,7 +42,7 @@ public class UserService {
             return false;
         }
         try {
-            userDao.followRepo(uid, repo);
+            followDao.followRepo(uid, repo);
             log.info("{} follow repo {}", uid, StringUtil.buildRepo(repo));
             return true;
         } catch (DataAccessException exception) {
@@ -55,7 +54,7 @@ public class UserService {
     public boolean unFollowRepo(String uid, String platform, String owner, String name) {
         RepoVO repo = new RepoVO(platform, owner, name);
         try {
-            userDao.unFollowRepo(uid, repo);
+            followDao.unFollowRepo(uid, repo);
             log.info("{} unfollow repo {}", uid, StringUtil.buildRepo(repo));
             return true;
         } catch (DataAccessException exception) {

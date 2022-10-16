@@ -8,6 +8,7 @@ import com.github.gitfy.gitfyapi.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 
 @RequestMapping(value = "/api/user", produces = "application/json; charset = UTF-8")
@@ -22,7 +23,7 @@ public class UserController {
      * @param telegram telegram 账号
      * @return ResultVO
      */
-    @RequestMapping(value = "/generate", method = {RequestMethod.POST})
+    @RequestMapping(value = "/add", method = {RequestMethod.POST})
     @ResponseBody
     public ResultVO addUser(@RequestParam("telegram") String telegram) {
         UserVO user = userService.addUser(telegram);
@@ -43,9 +44,9 @@ public class UserController {
     public ResultVO followRepo(@RequestParam("uid") String uid, @RequestParam("platform") String platform,
                                @RequestParam("owner") String owner, @RequestParam("name") String name) {
         if (userService.followRepo(uid, platform, owner, name)) {
-            return ResultFactory.success(null);
+            return ResultFactory.success();
         } else {
-            return ResultFactory.fail("Already followed or fail", null);
+            return ResultFactory.fail("Fail or already follow",null);
         }
     }
 
@@ -63,9 +64,9 @@ public class UserController {
     public ResultVO unFollowRepo(@RequestParam("uid") String uid, @RequestParam("platform") String platform,
                                  @RequestParam("owner") String owner, @RequestParam("name") String name) {
         if (userService.unFollowRepo(uid, platform, owner, name)) {
-            return ResultFactory.success(null);
+            return ResultFactory.success();
         } else {
-            return ResultFactory.fail("Fail", null);
+            return ResultFactory.fail();
         }
     }
 
