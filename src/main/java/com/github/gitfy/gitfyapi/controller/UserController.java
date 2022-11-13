@@ -5,13 +5,20 @@ import com.github.gitfy.gitfyapi.service.UserService;
 import com.github.gitfy.gitfyapi.vo.RepoVO;
 import com.github.gitfy.gitfyapi.vo.ResultVO;
 import com.github.gitfy.gitfyapi.vo.UserVO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping(value = "/api/user", produces = "application/json; charset = UTF-8")
+/**
+ * 用户 API
+ *
+ * @author SukiEva
+ */
 @RestController
+@ResponseBody
+@RequestMapping(value = "/api/user", produces = "application/json; charset = UTF-8")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -19,13 +26,13 @@ public class UserController {
     /**
      * 添加用户
      *
-     * @param telegram telegram 账号
+     * @param name     用户名
+     * @param password 用户密码
      * @return ResultVO
      */
     @RequestMapping(value = "/add", method = {RequestMethod.POST})
-    @ResponseBody
-    public ResultVO addUser(@RequestParam("telegram") String telegram) {
-        UserVO user = userService.addUser(telegram);
+    public ResultVO addUser(@RequestParam("name") String name, @RequestParam("password") String password) {
+        UserVO user = userService.addUser(name, password);
         return ResultFactory.success(user);
     }
 
@@ -39,13 +46,12 @@ public class UserController {
      * @return ResultVO
      */
     @RequestMapping(value = "/follow", method = {RequestMethod.POST})
-    @ResponseBody
     public ResultVO followRepo(@RequestParam("uid") String uid, @RequestParam("platform") String platform,
                                @RequestParam("owner") String owner, @RequestParam("name") String name) {
         if (userService.followRepo(uid, platform, owner, name)) {
             return ResultFactory.success();
         } else {
-            return ResultFactory.fail("Fail or already follow",null);
+            return ResultFactory.fail("Fail or already follow", null);
         }
     }
 
@@ -59,7 +65,6 @@ public class UserController {
      * @return ResultVO
      */
     @RequestMapping(value = "/unfollow", method = {RequestMethod.POST})
-    @ResponseBody
     public ResultVO unFollowRepo(@RequestParam("uid") String uid, @RequestParam("platform") String platform,
                                  @RequestParam("owner") String owner, @RequestParam("name") String name) {
         if (userService.unFollowRepo(uid, platform, owner, name)) {
@@ -76,7 +81,6 @@ public class UserController {
      * @return ResultVO
      */
     @RequestMapping(value = "/repos", method = {RequestMethod.GET})
-    @ResponseBody
     public ResultVO getReposByUid(@RequestParam("uid") String uid) {
         List<RepoVO> repos = userService.getReposByUid(uid);
         return ResultFactory.success(repos);

@@ -22,7 +22,7 @@ create table users
     uid      varchar(255) not null comment '用户uid',
     name     varchar(100) not null comment '用户名',
     password varchar(100) not null comment '用户密码',
-    telegram varchar(100) not null comment 'telegram',
+    telegram varchar(100) comment 'telegram',
     isadmin  bool default 0 not null comment '用户类型',
     primary key (uid) using btree,
     unique (name)
