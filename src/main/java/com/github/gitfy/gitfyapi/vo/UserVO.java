@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * 用户VO
+ * 用户 VO
  *
  * @author Suki
  */
