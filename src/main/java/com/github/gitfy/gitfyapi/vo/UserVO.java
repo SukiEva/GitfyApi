@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * 用户 VO
  *
- * @author Suki
+ * @author SukiEva
  */
 @Data
 @AllArgsConstructor

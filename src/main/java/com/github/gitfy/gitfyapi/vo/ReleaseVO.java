@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Relese 信息 VO
  *
- * @author Suki
+ * @author SukiEva
  */
 @Data
 public class ReleaseVO {

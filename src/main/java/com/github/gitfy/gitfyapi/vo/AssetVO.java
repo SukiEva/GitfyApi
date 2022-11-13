@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Asset 信息 VO
  *
- * @author Suki
+ * @author SukiEva
  */
 @Data
 public class AssetVO {

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 仓库信息 VO
  *
- * @author Suki
+ * @author SukiEva
  */
 @Data
 public class RepoVO {

@@ -1,10 +1,9 @@
-HELP.md
 target/
 .mvn
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-**/src/main/**/application-prod.properties
+**/src/main/**/application-prod.yml
 
 ### IntelliJ IDEA ###
 .idea
