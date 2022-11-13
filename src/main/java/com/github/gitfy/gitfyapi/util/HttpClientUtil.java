@@ -1,10 +1,10 @@
 package com.github.gitfy.gitfyapi.util;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
-import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
@@ -17,7 +17,6 @@ import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Component;
 
-import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -26,9 +25,11 @@ import java.util.Map;
 
 /**
  * Http 工具类
+ *
+ * @author SukiEva
  */
-@Component
 @Slf4j
+@Component
 public class HttpClientUtil {
     private static final String DEFAULT_ENCODING = "UTF-8";
 
@@ -58,18 +59,17 @@ public class HttpClientUtil {
     private static CloseableHttpClient httpClient;
 
     static {
-        PoolingHttpClientConnectionManager connectionManager;
         try {
-            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, (chain, authType) -> true).build();
-            SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext,
+            val sslContext = new SSLContextBuilder().loadTrustMaterial(null, (chain, authType) -> true).build();
+            val sslSocketFactory = new SSLConnectionSocketFactory(sslContext,
                     NoopHostnameVerifier.INSTANCE);
             // 设置http和https协议对应的处理socket链接工厂的对象
-            Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create().
+            val socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create().
                     register("http", PlainConnectionSocketFactory.getSocketFactory())
                     .register("https", sslSocketFactory)
                     .build();
             // 创建http连接池
-            connectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+            val connectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
             connectionManager.setMaxTotal(MAX_TOTAL);
             connectionManager.setDefaultMaxPerRoute(MAX_PER_ROUTE);
             httpClient = HttpClients.custom()
@@ -108,7 +108,7 @@ public class HttpClientUtil {
 
     private String doRequest(String method, String url, Map<String, Object> params,
                              Map<String, String> header) {
-        HttpUriRequest request = buildRequest(method, url, params, header);
+        val request = buildRequest(method, url, params, header);
         try (CloseableHttpResponse response = httpClient.execute(request)) {
             if (response != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 return EntityUtils.toString(response.getEntity(), DEFAULT_ENCODING);
@@ -121,7 +121,7 @@ public class HttpClientUtil {
 
     private HttpUriRequest buildRequest(String method, String url, Map<String, Object> params,
                                         Map<String, String> header) {
-        RequestBuilder requestBuilder = RequestBuilder.create(method);
+        val requestBuilder = RequestBuilder.create(method);
         requestBuilder.setUri(url);
         requestBuilder.setConfig(REQUEST_CONFIG);
         // 设置请求参数

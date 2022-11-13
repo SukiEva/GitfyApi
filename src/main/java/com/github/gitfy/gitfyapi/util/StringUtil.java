@@ -8,6 +8,8 @@ import java.util.Locale;
 
 /**
  * String 相关工具类
+ *
+ * @author SukiEva
  */
 public class StringUtil {
     /**
