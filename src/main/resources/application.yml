@@ -7,3 +7,19 @@ mybatis:
   type-aliases-package: com.github.gitfy.gitfyapi.vo
   configuration:
     map-underscore-to-camel-case: true
+
+#jetcache:
+#  statIntervalMinutes: 15
+#  remote:
+#    default:
+#      type: redis
+#      keyConvertor: fastjson2
+##      broadcastChannel: projectA
+#      valueEncoder: kryo5
+#      valueDecoder: kryo5
+#      poolConfig:
+#        minIdle: 5
+#        maxIdle: 20
+#        maxTotal: 50
+#      host: 127.0.0.1
+#      port: 6379

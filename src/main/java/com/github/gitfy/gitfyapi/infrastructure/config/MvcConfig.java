@@ -1,4 +1,4 @@
-package com.github.gitfy.gitfyapi.config;
+package com.github.gitfy.gitfyapi.infrastructure.config;
 
 import com.github.gitfy.gitfyapi.infrastructure.interceptor.ControllerInterceptor;
 import org.springframework.context.annotation.Configuration;
