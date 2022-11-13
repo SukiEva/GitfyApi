@@ -1,20 +1,23 @@
 package com.github.gitfy.gitfyapi.vo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.Date;
 
-@Getter
-@Setter
+/**
+ * Asset 信息 VO
+ *
+ * @author Suki
+ */
+@Data
 public class AssetVO {
     private String url;
 
     private String name;
 
-    private long size;
+    private Long size;
 
-    private long downloadCount;
+    private Long downloadCount;
 
     private Date createdAt;
 

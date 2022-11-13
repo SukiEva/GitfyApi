@@ -6,6 +6,11 @@ import lombok.NonNull;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 仓库信息 VO
+ *
+ * @author Suki
+ */
 @Data
 public class RepoVO {
     @NonNull

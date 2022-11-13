@@ -5,6 +5,8 @@ import org.apache.http.HttpStatus;
 
 /**
  * Controller 返回值工厂
+ *
+ * @author SukiEva
  */
 public class ResultFactory {
     public static ResultVO success(String message, Object data) {

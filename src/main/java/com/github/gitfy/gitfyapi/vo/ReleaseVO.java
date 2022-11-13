@@ -1,13 +1,16 @@
 package com.github.gitfy.gitfyapi.vo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
 
-@Getter
-@Setter
+/**
+ * Relese 信息 VO
+ *
+ * @author Suki
+ */
+@Data
 public class ReleaseVO {
     private String url;
 
@@ -15,7 +18,7 @@ public class ReleaseVO {
 
     private String name;
 
-    private boolean prerelease;
+    private Boolean prerelease;
 
     private Date createdAt;
 

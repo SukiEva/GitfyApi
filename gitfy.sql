@@ -1,39 +1,42 @@
 -- ----------------------------
--- Table structure for follows
+-- table structure for follows
 -- ----------------------------
-DROP TABLE IF EXISTS `follows`;
-CREATE TABLE `follows`
+drop table if exists follows;
+create table follows
 (
-    `id`       numeric      NOT NULL AUTO_INCREMENT COMMENT '自增id',
-    `uid`      varchar(255) NOT NULL COMMENT '用户uid',
-    `platform` varchar(50)  NOT NULL COMMENT '仓库平台',
-    `owner`    varchar(50)  NOT NULL COMMENT '仓库作者',
-    `name`     varchar(50)  NOT NULL COMMENT '仓库名称',
-    PRIMARY KEY (`id`)
+    id       int          not null auto_increment comment '自增id',
+    uid      varchar(255) not null comment '用户uid',
+    platform varchar(100) not null comment '仓库平台',
+    owner    varchar(100) not null comment '仓库作者',
+    name     varchar(100) not null comment '仓库名称',
+    primary key (id)
 );
 
 
 -- ----------------------------
--- Table structure for users
+-- table structure for users
 -- ----------------------------
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE `users`
+drop table if exists users;
+create table users
 (
-    `uid`      varchar(255) NOT NULL COMMENT '用户uid',
-    `telegram` varchar(50)  NOT NULL COMMENT 'Telegram',
-    `isadmin`  bool DEFAULT 0 COMMENT '用户类型',
-    PRIMARY KEY (`uid`) USING BTREE
+    uid      varchar(255) not null comment '用户uid',
+    name     varchar(100) not null comment '用户名',
+    password varchar(100) not null comment '用户密码',
+    telegram varchar(100) not null comment 'telegram',
+    isadmin  bool default 0 not null comment '用户类型',
+    primary key (uid) using btree,
+    unique (name)
 );
 
 -- ----------------------------
--- Table structure for repos
+-- table structure for repos
 -- ----------------------------
-DROP TABLE IF EXISTS `repos`;
-CREATE TABLE `repos`
+drop table if exists repos;
+create table repos
 (
-    `id`       numeric     NOT NULL AUTO_INCREMENT COMMENT '自增id',
-    `platform` varchar(50) NOT NULL COMMENT '仓库平台',
-    `owner`    varchar(50) NOT NULL COMMENT '仓库作者',
-    `name`     varchar(50) NOT NULL COMMENT '仓库名称',
-    PRIMARY KEY (`id`)
+    id       int          not null auto_increment comment '自增id',
+    platform varchar(100) not null comment '仓库平台',
+    owner    varchar(100) not null comment '仓库作者',
+    name     varchar(100) not null comment '仓库名称',
+    primary key (id)
 );
