@@ -24,12 +24,12 @@
         where uid = #{uid}
     </select>
 
-    <select id="ifRepoFollowed" resultType="int">
+    <select id="ifRepoFollowed" resultType="boolean">
         select count(1)
         from follows
         where uid = #{uid}
           and platform = #{repo.platform}
           and owner = #{repo.owner}
-          and name = #{repo.repo}
+          and name = #{repo.name}
     </select>
 </mapper>

@@ -4,14 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.github.gitfy.gitfyapi.vo.UserVO;
 
-import java.util.UUID;
-
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
+
+import java.util.UUID;
 
 /**
  * 用户 DAO 测试
