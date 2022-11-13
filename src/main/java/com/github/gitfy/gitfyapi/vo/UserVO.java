@@ -1,18 +1,23 @@
 package com.github.gitfy.gitfyapi.vo;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
+/**
+ * 用户VO
+ *
+ * @author Suki
+ */
+@Data
 @AllArgsConstructor
 public class UserVO {
     private String uid;
 
+    private String name;
+
+    private String password;
+
     private String telegram;
 
-    private boolean isAdmin;
+    private Boolean isAdmin;
 }

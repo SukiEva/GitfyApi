@@ -1,25 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.github.gitfy.gitfyapi.dao.IUserDao">
-    <insert id="addUser" parameterType="userVO">
-        insert into users(uid, telegram, isadmin)
-        values (#{uid}, #{telegram}, #{isAdmin})
-    </insert>
+  <sql id="cols">
+    uid, name, password, telegram, isadmin
+  </sql>
 
+  <insert id="addUser" parameterType="userVO">
+    insert into users(<include refid="cols"/>)
+    values (#{uid}, #{name}, #{password}, #{telegram}, #{isAdmin})
+  </insert>
 
-    <delete id="deleteUser">
-        delete
-        from users
-        where uid = #{uid}
-          and telegram = #{telegram}
-    </delete>
+  <delete id="deleteUser" parameterType="string">
+    delete
+    from users
+    where uid = #{uid}
+  </delete>
 
-    <select id="findUser" parameterType="string" resultType="userVO">
-        select uid, telegram, isadmin
-        from users
-        where telegram = #{telegram}
-    </select>
+  <select id="findUserByTelegram" parameterType="string" resultType="userVO">
+    select <include refid="cols"/>
+    from users
+    where telegram = #{telegram}
+  </select>
+
+  <select id="findUserByUid" parameterType="string" resultType="userVO">
+    select <include refid="cols"/>
+    from users
+    where uid = #{uid}
+  </select>
+
+  <select id="findUserByName" parameterType="string" resultType="userVO">
+    select <include refid="cols"/>
+    from users
+    where name = #{name}
+  </select>
 </mapper>
