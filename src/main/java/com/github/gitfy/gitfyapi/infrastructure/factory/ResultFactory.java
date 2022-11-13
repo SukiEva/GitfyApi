@@ -1,8 +1,11 @@
-package com.github.gitfy.gitfyapi.infrastructure;
+package com.github.gitfy.gitfyapi.infrastructure.factory;
 
 import com.github.gitfy.gitfyapi.vo.ResultVO;
 import org.apache.http.HttpStatus;
 
+/**
+ * Controller 返回值工厂
+ */
 public class ResultFactory {
     public static ResultVO success(String message, Object data) {
         return buildResult(HttpStatus.SC_OK, message, data);

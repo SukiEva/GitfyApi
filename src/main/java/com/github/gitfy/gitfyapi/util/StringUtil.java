@@ -6,6 +6,9 @@ import org.apache.http.client.utils.URIBuilder;
 import java.net.URISyntaxException;
 import java.util.Locale;
 
+/**
+ * String 相关工具类
+ */
 public class StringUtil {
     /**
      * 构建仓库 String

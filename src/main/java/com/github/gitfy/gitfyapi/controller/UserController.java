@@ -1,13 +1,12 @@
 package com.github.gitfy.gitfyapi.controller;
 
-import com.github.gitfy.gitfyapi.infrastructure.ResultFactory;
+import com.github.gitfy.gitfyapi.infrastructure.factory.ResultFactory;
 import com.github.gitfy.gitfyapi.service.UserService;
 import com.github.gitfy.gitfyapi.vo.RepoVO;
 import com.github.gitfy.gitfyapi.vo.ResultVO;
 import com.github.gitfy.gitfyapi.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 

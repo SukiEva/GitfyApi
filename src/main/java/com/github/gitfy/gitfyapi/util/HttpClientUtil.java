@@ -24,6 +24,9 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
+/**
+ * Http 工具类
+ */
 @Component
 @Slf4j
 public class HttpClientUtil {
