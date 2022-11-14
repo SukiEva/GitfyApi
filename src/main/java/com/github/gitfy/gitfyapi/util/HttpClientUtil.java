@@ -15,7 +15,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -29,7 +28,6 @@ import java.util.Map;
  * @author SukiEva
  */
 @Slf4j
-@Component
 public class HttpClientUtil {
     private static final String DEFAULT_ENCODING = "UTF-8";
 
@@ -80,6 +78,19 @@ public class HttpClientUtil {
             log.error("Fail to create customed http client: {}", exception.getMessage());
             httpClient = HttpClients.createDefault();
         }
+    }
+
+    private static class Holder {
+        private static final HttpClientUtil INSTANCE = new HttpClientUtil();
+    }
+
+    /**
+     * Singleton HttpClientUtil
+     *
+     * @return HttpClientUtil
+     */
+    public static HttpClientUtil create() {
+        return Holder.INSTANCE;
     }
 
     /**
